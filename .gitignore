@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+build
+.env*
+!.env.example
+next-env.d.ts
+*.tsbuildinfo
+
+# OpenNext / Cloudflare
+.open-next
+.wrangler
+cloudflare-env.d.ts
+.dev.vars*
+!.dev.vars.example

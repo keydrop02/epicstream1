@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "epicstream",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  }
+  // Runtime env vars can be added here, e.g.:
+  // "vars": { "STREAMED_API": "https://streamed.pk", "STREAMED_REVALIDATE": "30" }
+  // For persistent ISR caching, add an R2 bucket and reference it in open-next.config.ts.
+}
