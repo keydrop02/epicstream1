@@ -61,7 +61,7 @@ export function SourceList({
                     <div className="flex min-w-0 flex-1 items-center gap-3">
                       <span
                         className={cn(
-                          "inline-flex shrink-0 items-center justify-center rounded-md px-1.5 py-0.5 text-[10px] font-bold",
+                          "inline-flex shrink-0 items-center justify-center rounded px-1.5 py-0.5 text-[10px] font-bold",
                           s.hd
                             ? "bg-primary text-primary-foreground"
                             : "bg-secondary text-muted-foreground",
@@ -69,21 +69,14 @@ export function SourceList({
                       >
                         {s.hd ? "HD" : "SD"}
                       </span>
-                      <span className="min-w-0 flex-1 truncate text-sm font-medium">
+                      <span className="shrink-0 whitespace-nowrap text-sm font-medium">
                         Stream {s.streamNo}
                       </span>
-                      <span className="flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
+                      <span className="flex min-w-0 flex-1 items-center justify-end gap-1 text-xs text-muted-foreground">
                         <Globe className="h-3.5 w-3.5 shrink-0" />
                         <span className="truncate">{s.language}</span>
                       </span>
                     </div>
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "h-2 w-2 shrink-0 rounded-full",
-                        active ? "bg-primary" : "bg-transparent",
-                      )}
-                    />
                   </button>
                 );
               })}

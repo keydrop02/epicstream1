@@ -7,6 +7,7 @@ import { CountdownTimer } from "@/components/countdown-timer";
 import { SourceList } from "@/components/source-list";
 import type { StreamGroup } from "@/components/source-list";
 import { Button } from "@/components/ui/button";
+import { hasInAppHistory, markReplace } from "@/lib/nav-history";
 import { safeEmbedUrl } from "@/lib/format";
 import type { Stream } from "@/lib/types";
 
@@ -153,8 +154,12 @@ export function StreamsPanel({
   const closeEmbed = useCallback(() => setEmbedOpen(false), []);
 
   const selectStream = (s: Stream) => {
+    if (activeStream && activeStream.source === s.source && activeStream.streamNo === s.streamNo) {
+      return;
+    }
     const url = `/watch/${slug}/${s.source}/${s.streamNo}`;
     if (activeStream) {
+      markReplace();
       router.replace(url);
     } else {
       router.push(url);
@@ -163,11 +168,12 @@ export function StreamsPanel({
   };
 
   const goBack = () => {
-    if (activeStream && typeof window !== "undefined" && window.history.length <= 1) {
-      router.replace(`/watch/${slug}`);
+    if (hasInAppHistory()) {
+      router.back();
       return;
     }
-    router.back();
+    markReplace();
+    router.replace(activeStream ? `/watch/${slug}` : "/");
   };
 
   return (
@@ -175,7 +181,7 @@ export function StreamsPanel({
       <div className="relative flex h-full w-full justify-center overflow-x-hidden">
         <div className="mx-auto h-full w-full max-w-4xl overflow-y-clip">
           <div className="py-3 text-center">
-            <h1 className="text-xl font-bold tracking-tight md:text-2xl">{title}</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
             {activeStream ? null : (
               <p className="mx-auto mt-2 max-w-2xl text-sm text-muted-foreground">
                 To watch {title}, scroll down and select your preferred stream. If no links are

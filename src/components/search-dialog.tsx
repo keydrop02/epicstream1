@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Search, X } from "lucide-react";
-import { categoryName, matchSlug, posterUrl } from "@/lib/format";
+import { categoryName, isLive, matchSlug, posterUrl } from "@/lib/format";
 import type { Match } from "@/lib/types";
 
 export function SearchDialog({ onClose }: { onClose: () => void }) {
@@ -111,8 +111,16 @@ export function SearchDialog({ onClose }: { onClose: () => void }) {
                 className="h-11 w-[4.5rem] rounded-md object-cover"
               />
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-semibold">{m.title}</span>
-                <span className="block text-xs text-muted-foreground">
+                <span className="flex items-center gap-2 text-sm">
+                  <span className="min-w-0 truncate text-sm font-semibold">{m.title}</span>
+                  {isLive(m.date) ? (
+                    <span className="inline-flex shrink-0 items-center gap-[0.4em] rounded-md bg-primary px-[0.6em] py-[0.15em] text-[0.7em] font-bold uppercase tracking-wider text-primary-foreground">
+                      <span className="h-[0.4em] w-[0.4em] animate-pulse rounded-full bg-white" aria-hidden />
+                      Live
+                    </span>
+                  ) : null}
+                </span>
+                <span className="mt-0.5 block text-xs text-muted-foreground">
                   {categoryName(m.category)}
                 </span>
               </span>

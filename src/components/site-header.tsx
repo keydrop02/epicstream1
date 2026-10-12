@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -22,6 +23,11 @@ const navItems = [
   { href: "/", label: "Home" },
   { href: "/schedule", label: "Schedule" },
 ];
+
+function refreshNavigate(e: ReactMouseEvent<HTMLAnchorElement>, href: string) {
+  e.preventDefault();
+  window.location.assign(href);
+}
 
 function SportsMenu({ sports }: { sports: Sport[] }) {
   const [open, setOpen] = useState(false);
@@ -69,7 +75,7 @@ function SportsMenu({ sports }: { sports: Sport[] }) {
             <Link
               key={s.id}
               href={`/schedule?sport=${s.id}`}
-              onClick={() => setOpen(false)}
+              onClick={(e) => refreshNavigate(e, `/schedule?sport=${s.id}`)}
               className="block truncate rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             >
               {categoryName(s.id)}
@@ -133,7 +139,7 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
     <>
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 w-full max-w-screen-2xl items-center gap-4 px-3 sm:gap-6 sm:px-4 lg:px-6">
-          <Link href="/" className="group flex shrink-0 items-center">
+          <Link href="/" onClick={(e) => refreshNavigate(e, "/")} className="group flex shrink-0 items-center">
             <span className="font-display text-2xl font-bold tracking-tight text-white">
               EpicStream
             </span>
@@ -144,6 +150,7 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={(e) => refreshNavigate(e, item.href)}
                 className={cn(
                   "text-sm transition-colors hover:text-foreground",
                   pathname === item.href ? "text-foreground" : "text-muted-foreground",
@@ -173,7 +180,7 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
               <span className="hidden md:inline">Search</span>
             </button>
 
-            <Link href="/multiview" className="hidden md:block">
+            <Link href="/multiview" onClick={(e) => refreshNavigate(e, "/multiview")} className="hidden md:block">
               <Button variant="outline" className="gap-2">
                 <LayoutGrid className="h-4 w-4" />
                 Multi Stream
@@ -228,7 +235,7 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={closeMenu}
+                  onClick={(e) => refreshNavigate(e, item.href)}
                   className={cn(
                     "border-b border-border py-4 text-base font-medium",
                     pathname === item.href ? "text-foreground" : "text-muted-foreground",
@@ -260,7 +267,7 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
                         <Link
                           key={s.id}
                           href={`/schedule?sport=${s.id}`}
-                          onClick={closeMenu}
+                          onClick={(e) => refreshNavigate(e, `/schedule?sport=${s.id}`)}
                           className="block py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
                         >
                           {categoryName(s.id)}
@@ -281,7 +288,7 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
               </button>
             </nav>
 
-            <Link href="/multiview" onClick={closeMenu} className="mt-5 block">
+            <Link href="/multiview" onClick={(e) => refreshNavigate(e, "/multiview")} className="mt-5 block">
               <Button className="w-full gap-2">
                 <LayoutGrid className="h-4 w-4" />
                 Multi Stream

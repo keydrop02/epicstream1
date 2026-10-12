@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, LayoutGrid, Rows2, Search, Square, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { SourceList } from "@/components/source-list";
 import { categoryName } from "@/lib/format";
 import type { Match, Sport, Stream } from "@/lib/types";
@@ -282,8 +281,10 @@ function AddStreamModal({
                       type="button"
                       onClick={() => setSport((prev) => (prev === s.id ? null : s.id))}
                       className={cn(
-                        "flex h-20 cursor-pointer flex-col items-center justify-center rounded-lg p-2 text-center text-sm font-medium transition-colors",
-                        sport === s.id ? "bg-primary/10 text-primary" : "bg-muted/50 hover:bg-muted",
+                        "flex h-20 cursor-pointer flex-col items-center justify-center rounded-lg border p-2 text-center text-sm font-medium transition-colors",
+                        sport === s.id
+                          ? "border-primary/50 bg-primary/10 text-primary"
+                          : "border-border bg-muted/50 hover:bg-muted",
                       )}
                     >
                       <span className="line-clamp-2">{s.name}</span>
@@ -296,13 +297,7 @@ function AddStreamModal({
             {heading ? (
               <h3 className="mb-3 text-lg font-semibold">{heading}</h3>
             ) : (
-              <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-                Popular Live
-                <Badge variant="live" className="gap-1.5">
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" aria-hidden />
-                  LIVE
-                </Badge>
-              </h3>
+              <h3 className="mb-3 text-lg font-semibold">Popular Live</h3>
             )}
 
             <div className="space-y-2">

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Orbitron } from "next/font/google";
+import { NavTracker } from "@/components/nav-tracker";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { getSports } from "@/lib/api";
@@ -54,6 +55,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${inter.variable} ${orbitron.variable}`} suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
+        <NavTracker />
         <div className="flex min-h-screen flex-col">
           <SiteHeader sports={sports} />
           <main className="flex flex-1 flex-col">{children}</main>
