@@ -32,7 +32,7 @@ const COLUMNS = ["Timestamp", "Message", "Email"];
 const MAX_CHARS = 2000;
 
 /** Your deployed web app URL (used by keepWarm). */
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwOAOWRVk7_Uhpf9MrIh6qiRKMnTypsKqNrN4p9dJeWWGFFDbwPbIYRWJlSdEmjIQu3Bg/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwgBZRJYj9HuZIbOQMIFk8c5UdB04zjOB5FayzU2trT-1CSbkf6YAbw9k13QsZ0iIBUNw/exec";
 
 /**
  * One-time setup: store the sheet id and make sure headers exist.
