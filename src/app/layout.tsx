@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Orbitron } from "next/font/google";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { getSports } from "@/lib/api";
@@ -11,6 +12,13 @@ const inter = localFont({
   variable: "--font-inter",
   display: "swap",
   weight: "100 900",
+});
+
+const orbitron = Orbitron({
+  subsets: ["latin"],
+  weight: "variable",
+  variable: "--font-orbitron",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -44,7 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const sports = await getSports();
 
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${orbitron.variable}`} suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         <div className="flex min-h-screen flex-col">
           <SiteHeader sports={sports} />

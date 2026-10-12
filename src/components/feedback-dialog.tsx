@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { MessageSquareText, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FEEDBACK_WEBAPP_URL } from "@/lib/site";
 
 const FEEDBACK_EMAIL = "feedback@epicstream.com";
 const MAX_CHARS = 2000;
@@ -38,7 +39,7 @@ function writeQueue(queue: FeedbackItem[]) {
 }
 
 async function sendItem(item: FeedbackItem): Promise<boolean> {
-  const endpoint = process.env.NEXT_PUBLIC_FEEDBACK_WEBAPP_URL;
+  const endpoint = FEEDBACK_WEBAPP_URL;
   const token = process.env.NEXT_PUBLIC_FEEDBACK_TOKEN;
   if (!endpoint) return true;
   try {
@@ -101,7 +102,7 @@ export function FeedbackDialog({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     if (!message.trim() || sent) return;
 
-    const endpoint = process.env.NEXT_PUBLIC_FEEDBACK_WEBAPP_URL;
+    const endpoint = FEEDBACK_WEBAPP_URL;
     if (!endpoint) {
       const subject = "[EpicStream] Feedback";
       const body = message.trim() + (email.trim() ? `\n\nEmail: ${email.trim()}` : "");

@@ -34,7 +34,7 @@ export default async function HomePage() {
   return (
     <div className="mx-auto w-full max-w-screen-2xl px-3 py-8 sm:px-4 lg:px-6">
       <h1 className="sr-only">{SITE_NAME} — Watch Live Sports Online Free</h1>
-      <div className="space-y-5">
+      <div className="space-y-5 pb-4">
         <section>
           <SectionHeader
             title="Popular Live"

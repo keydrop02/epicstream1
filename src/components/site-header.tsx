@@ -134,7 +134,7 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 w-full max-w-screen-2xl items-center gap-4 px-3 sm:gap-6 sm:px-4 lg:px-6">
           <Link href="/" className="group flex shrink-0 items-center">
-            <span className="text-2xl font-bold tracking-tight text-white">
+            <span className="font-display text-2xl font-bold tracking-tight text-white">
               EpicStream
             </span>
           </Link>

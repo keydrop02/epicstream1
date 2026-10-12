@@ -17,7 +17,7 @@ export function SectionHeader({
   as?: "h2" | "h3";
 }) {
   const heading = (
-    <Heading className="flex items-center gap-2 text-xl font-extrabold tracking-tight sm:text-2xl">
+    <Heading className="flex items-center gap-2 text-xl font-bold tracking-tight sm:text-2xl">
       {icon}
       {title}
       {badge}

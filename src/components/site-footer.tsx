@@ -7,7 +7,7 @@ export function SiteFooter() {
     <footer className="mt-20 border-t border-border">
       <div className="mx-auto flex w-full max-w-screen-2xl flex-col items-center px-3 py-12 text-center sm:px-4 lg:px-6">
         <Link href="/" className="inline-block">
-          <span className="text-2xl font-bold tracking-tight text-white">{SITE_NAME}</span>
+          <span className="font-display text-2xl font-bold tracking-tight text-white">{SITE_NAME}</span>
         </Link>
 
         <h2 className="mt-6 text-lg font-semibold tracking-tight text-foreground">
