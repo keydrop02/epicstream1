@@ -10,7 +10,7 @@ export function SiteFooter() {
           <span className="text-2xl font-bold tracking-tight text-white">{SITE_NAME}</span>
         </Link>
 
-        <h2 className="text-lg font-semibold tracking-tight text-foreground">
+        <h2 className="mt-6 text-lg font-semibold tracking-tight text-foreground">
           How to Watch Live Sports Free Online
         </h2>
 

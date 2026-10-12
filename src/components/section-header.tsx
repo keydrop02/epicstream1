@@ -17,14 +17,14 @@ export function SectionHeader({
   as?: "h2" | "h3";
 }) {
   const heading = (
-    <Heading className="flex items-center gap-2 text-xl font-bold tracking-tight sm:text-2xl">
+    <Heading className="flex items-center gap-2 text-xl font-extrabold tracking-tight sm:text-2xl">
       {icon}
       {title}
       {badge}
     </Heading>
   );
   return (
-    <div className="mb-5 flex items-center justify-between gap-4">
+    <div className="mb-3 flex items-center justify-between gap-4">
       {href ? (
         <Link href={href} className="transition-opacity hover:opacity-80">
           {heading}
