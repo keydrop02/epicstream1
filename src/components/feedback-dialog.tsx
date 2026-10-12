@@ -12,7 +12,9 @@ const QUEUE_KEY = "epicstream:feedbackQueue";
 const FIELD_CLASS =
   "h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary";
 
-type FeedbackItem = { id: string; message: string; email: string };
+type FeedbackItem = { id: string; message: string; email: string; attempts?: number };
+
+const MAX_SEND_ATTEMPTS = 3;
 
 let draining = false;
 
@@ -37,6 +39,7 @@ function writeQueue(queue: FeedbackItem[]) {
 
 async function sendItem(item: FeedbackItem): Promise<boolean> {
   const endpoint = process.env.NEXT_PUBLIC_FEEDBACK_WEBAPP_URL;
+  const token = process.env.NEXT_PUBLIC_FEEDBACK_TOKEN;
   if (!endpoint) return true;
   try {
     const controller = new AbortController();
@@ -44,7 +47,7 @@ async function sendItem(item: FeedbackItem): Promise<boolean> {
     const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ message: item.message, email: item.email }),
+      body: JSON.stringify({ message: item.message, email: item.email, token }),
       signal: controller.signal,
     });
     clearTimeout(timeout);
@@ -62,7 +65,10 @@ async function drainQueue() {
     const queue = readQueue();
     while (queue.length > 0) {
       const ok = await sendItem(queue[0]);
-      if (!ok) break;
+      if (!ok) {
+        queue[0].attempts = (queue[0].attempts ?? 0) + 1;
+        if (queue[0].attempts < MAX_SEND_ATTEMPTS) break;
+      }
       queue.shift();
       writeQueue(queue);
     }
@@ -109,21 +115,21 @@ export function FeedbackDialog({ onClose }: { onClose: () => void }) {
     setTimeout(onClose, 1200);
 
     const queue = readQueue();
-    queue.push({ id: `${Date.now()}-${Math.random().toString(36).slice(2)}`, message: message.trim(), email: email.trim() });
+    queue.push({ id: `${Date.now()}-${Math.random().toString(36).slice(2)}`, message: message.trim(), email: email.trim(), attempts: 0 });
     writeQueue(queue);
     drainQueue();
   };
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
       <form
         role="dialog"
         aria-modal="true"
         aria-labelledby="feedback-title"
         aria-describedby="feedback-description"
         onSubmit={handleSubmit}
-        className="relative z-10 w-full max-w-md overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl"
+        className="relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-2xl shadow-black/60"
       >
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <div id="feedback-title" className="flex items-center gap-2 text-lg font-semibold">

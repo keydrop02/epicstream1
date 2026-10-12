@@ -3,7 +3,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, Search, X } from "lucide-react";
+import {
+  ChevronDown,
+  LayoutGrid,
+  Menu,
+  MessageSquare,
+  Search,
+  X,
+} from "lucide-react";
 import { SearchDialog } from "@/components/search-dialog";
 import { FeedbackDialog } from "@/components/feedback-dialog";
 import { Button } from "@/components/ui/button";
@@ -14,7 +21,6 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/schedule", label: "Schedule" },
-  { href: "/multiview", label: "Multi Stream" },
 ];
 
 function SportsMenu({ sports }: { sports: Sport[] }) {
@@ -46,23 +52,25 @@ function SportsMenu({ sports }: { sports: Sport[] }) {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex items-center gap-1 text-foreground/60 transition-colors hover:text-foreground/80"
+        className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
       >
         Sports
-        <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
+        <ChevronDown
+          className={cn("h-4 w-4 transition-transform duration-200", open && "rotate-180")}
+        />
       </button>
 
       {open && (
         <div
           role="menu"
-          className="absolute left-0 top-full z-50 mt-2 max-h-[70vh] w-56 overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg"
+          className="absolute left-0 top-full z-50 mt-3 max-h-[70vh] w-56 overflow-y-auto rounded-xl border border-border bg-popover p-1.5 shadow-2xl shadow-black/50"
         >
           {sports.map((s) => (
             <Link
               key={s.id}
               href={`/schedule?sport=${s.id}`}
               onClick={() => setOpen(false)}
-              className="block truncate rounded-sm px-2 py-1.5 transition-colors hover:bg-accent hover:text-accent-foreground"
+              className="block truncate rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             >
               {categoryName(s.id)}
             </Link>
@@ -82,6 +90,17 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
   const closeSearch = useCallback(() => setSearchOpen(false), []);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const closeFeedback = useCallback(() => setFeedbackOpen(false), []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -112,61 +131,53 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background md:bg-background/95 md:backdrop-blur supports-[backdrop-filter]:md:bg-background/80">
-        <div className="container flex h-14 max-w-screen-2xl items-center justify-between gap-2 px-4 sm:px-6 md:gap-4 lg:px-10">
-          <Link href="/" className="flex shrink-0 items-center font-bold md:hidden">
-            <span className="text-2xl">EpicStream</span>
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 w-full max-w-screen-2xl items-center gap-4 px-3 sm:gap-6 sm:px-4 lg:px-6">
+          <Link href="/" className="group flex shrink-0 items-center">
+            <span className="text-2xl font-bold tracking-tight text-white">
+              EpicStream
+            </span>
           </Link>
 
-          <div className="mr-4 hidden items-center md:flex">
-            <Link href="/" className="relative mr-6 flex items-center">
-              <span className="hidden text-xl font-bold sm:inline-block">EpicStream</span>
-            </Link>
-            <nav className="flex items-center gap-6 text-sm">
-              {navItems.slice(0, 2).map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "transition-colors hover:text-foreground/80",
-                    pathname === item.href ? "text-foreground" : "text-foreground/60",
-                  )}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <SportsMenu sports={sports} />
-              <button
-                type="button"
-                onClick={openFeedback}
-                className="text-foreground/60 transition-colors hover:text-foreground/80"
+          <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "text-sm transition-colors hover:text-foreground",
+                  pathname === item.href ? "text-foreground" : "text-muted-foreground",
+                )}
               >
-                Feedback
-              </button>
-            </nav>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setSearchOpen(true)}
-            className="flex h-10 min-w-0 max-w-md flex-1 items-center gap-2 rounded-sm border border-border bg-background px-3 text-sm text-muted-foreground transition-colors hover:border-primary/40 md:hidden"
-          >
-            <Search className="h-4 w-4 shrink-0" />
-            <span className="truncate">Search…</span>
-          </button>
-
-          <div className="flex shrink-0 items-center justify-end space-x-2">
-            <Button
-              variant="outline"
-              onClick={() => setSearchOpen(true)}
-              className="relative hidden h-11 w-80 justify-start text-base font-normal text-muted-foreground md:flex lg:w-96"
+                {item.label}
+              </Link>
+            ))}
+            <SportsMenu sports={sports} />
+            <button
+              type="button"
+              onClick={openFeedback}
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
-              <Search className="h-4 w-4" />
-              Search
-            </Button>
+              Feedback
+            </button>
+          </nav>
+
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={openSearch}
+              aria-label="Search"
+              className="flex h-10 w-10 items-center justify-center gap-2 rounded-lg border border-border bg-secondary/40 text-sm text-muted-foreground transition-colors hover:border-white/15 hover:text-foreground md:w-auto md:min-w-72 md:justify-start md:px-3.5"
+            >
+              <Search className="h-4 w-4 shrink-0" />
+              <span className="hidden md:inline">Search</span>
+            </button>
 
             <Link href="/multiview" className="hidden md:block">
-              <Button variant="outline">Multi Stream</Button>
+              <Button variant="outline" className="gap-2">
+                <LayoutGrid className="h-4 w-4" />
+                Multi Stream
+              </Button>
             </Link>
 
             <Button
@@ -188,42 +199,39 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
           menuOpen ? "pointer-events-auto" : "pointer-events-none",
         )}
         aria-hidden={!menuOpen}
+        inert={!menuOpen}
       >
         <div
           onClick={closeMenu}
           className={cn(
-            "absolute inset-0 bg-black/55 transition-opacity duration-200",
+            "absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-200",
             menuOpen ? "opacity-100" : "opacity-0",
           )}
         />
         <aside
           aria-label="Mobile menu"
           className={cn(
-            "absolute right-0 top-0 flex h-full w-[80%] max-w-[min(20rem,85vw)] flex-col bg-black shadow-[-4px_0_24px_rgba(0,0,0,0.45)] transition-transform duration-200 ease-out",
+            "absolute right-0 top-0 flex h-full w-[82%] max-w-[min(20rem,85vw)] flex-col border-l border-border bg-popover shadow-2xl shadow-black/60 transition-transform duration-200 ease-out",
             menuOpen ? "translate-x-0" : "translate-x-full",
           )}
         >
-          <div className="flex shrink-0 items-start justify-end gap-3 px-5 pb-4 pt-[max(12px,env(safe-area-inset-top))]">
-            <button
-              type="button"
-              onClick={closeMenu}
-              aria-label="Close menu"
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-[#222222] text-white transition-colors hover:bg-white/[0.04]"
-            >
+          <div className="flex shrink-0 items-center justify-between border-b border-border px-5 pb-4 pt-[max(14px,env(safe-area-inset-top))]">
+            <span className="text-sm font-semibold text-muted-foreground">Menu</span>
+            <Button variant="ghost" size="icon" onClick={closeMenu} aria-label="Close menu">
               <X className="h-4 w-4" />
-            </button>
+            </Button>
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-8">
-            <nav className="flex flex-col" aria-label="Mobile">
+            <nav className="mt-2 flex flex-col" aria-label="Mobile">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={closeMenu}
                   className={cn(
-                    "py-4 text-lg font-bold tracking-tight",
-                    pathname === item.href ? "text-white" : "text-muted-foreground",
+                    "border-b border-border py-4 text-base font-medium",
+                    pathname === item.href ? "text-foreground" : "text-muted-foreground",
                   )}
                 >
                   {item.label}
@@ -231,30 +239,29 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
               ))}
 
               {sports.length > 0 && (
-                <div>
+                <div className="border-b border-border">
                   <button
                     type="button"
                     onClick={() => setSportsOpen((v) => !v)}
                     aria-expanded={sportsOpen}
-                    aria-label="Sports menu"
-                    className="flex w-full items-center justify-between py-4 text-left text-lg font-bold tracking-tight text-muted-foreground"
+                    className="flex w-full items-center justify-between py-4 text-left text-base font-medium text-muted-foreground"
                   >
                     Sports
-                    <span
-                      className={cn("shrink-0 text-xs transition-transform", sportsOpen && "rotate-180")}
-                      aria-hidden
-                    >
-                      ▾
-                    </span>
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 transition-transform",
+                        sportsOpen && "rotate-180",
+                      )}
+                    />
                   </button>
                   {sportsOpen && (
-                    <div className="border-t border-border pl-1 pt-1">
+                    <div className="pb-2 pl-1">
                       {sports.map((s) => (
                         <Link
                           key={s.id}
                           href={`/schedule?sport=${s.id}`}
                           onClick={closeMenu}
-                          className="block py-3 text-base font-semibold text-muted-foreground transition-colors hover:text-white"
+                          className="block py-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
                         >
                           {categoryName(s.id)}
                         </Link>
@@ -267,11 +274,19 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
               <button
                 type="button"
                 onClick={openFeedback}
-                className="flex items-center gap-2 py-4 text-left text-lg font-bold tracking-tight text-muted-foreground"
+                className="flex items-center gap-2 border-b border-border py-4 text-left text-base font-medium text-muted-foreground"
               >
+                <MessageSquare className="h-4 w-4" />
                 Feedback
               </button>
             </nav>
+
+            <Link href="/multiview" onClick={closeMenu} className="mt-5 block">
+              <Button className="w-full gap-2">
+                <LayoutGrid className="h-4 w-4" />
+                Multi Stream
+              </Button>
+            </Link>
           </div>
         </aside>
       </div>

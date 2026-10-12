@@ -17,8 +17,13 @@ export default async function SchedulePage() {
   ]);
 
   return (
-    <div className="container max-w-screen-2xl space-y-6 px-4 py-8 sm:px-6 lg:px-10">
-      <h1 className="text-2xl font-bold sm:text-3xl">Schedule</h1>
+    <div className="mx-auto w-full max-w-screen-2xl space-y-8 px-3 py-10 sm:px-4 lg:px-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Schedule</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Every upcoming match, grouped by day.
+        </p>
+      </div>
       <Suspense fallback={null}>
         <ScheduleView matches={matches} sports={sports} live={live} />
       </Suspense>

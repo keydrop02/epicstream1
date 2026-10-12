@@ -6,20 +6,25 @@ export function SectionHeader({
   icon,
   href,
   action,
+  badge,
+  as: Heading = "h2",
 }: {
   title: string;
   icon?: ReactNode;
   href?: string;
   action?: ReactNode;
+  badge?: ReactNode;
+  as?: "h2" | "h3";
 }) {
   const heading = (
-    <span className="flex items-center gap-2 text-xl font-bold">
+    <Heading className="flex items-center gap-2 text-xl font-bold tracking-tight sm:text-2xl">
       {icon}
       {title}
-    </span>
+      {badge}
+    </Heading>
   );
   return (
-    <div className="mb-2 flex items-center justify-between gap-4">
+    <div className="mb-5 flex items-center justify-between gap-4">
       {href ? (
         <Link href={href} className="transition-opacity hover:opacity-80">
           {heading}

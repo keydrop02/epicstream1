@@ -38,14 +38,14 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
 
   return (
     <div className="relative">
-      <div className="absolute right-0 top-0 z-10 flex -translate-y-full items-center gap-1 pb-2">
+      <div className="absolute right-0 top-0 z-10 flex -translate-y-full items-center gap-1.5 pb-4">
         <button
           type="button"
           aria-label="Previous"
           onClick={() => scrollBy(-1)}
           disabled={!canPrev}
           className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background transition-opacity",
+            "flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground transition-colors hover:border-white/20 hover:bg-accent",
             canPrev ? "opacity-100" : "pointer-events-none opacity-40",
           )}
         >
@@ -57,7 +57,7 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
           onClick={() => scrollBy(1)}
           disabled={!canNext}
           className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background transition-opacity",
+            "flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-foreground transition-colors hover:border-white/20 hover:bg-accent",
             canNext ? "opacity-100" : "pointer-events-none opacity-40",
           )}
         >

@@ -26,12 +26,6 @@ export function posterUrl(poster?: string | null): string {
   return poster.startsWith("/") ? poster : `/${poster}`;
 }
 
-export function badgeUrl(badge?: string | null): string | null {
-  if (!badge) return null;
-  if (badge.startsWith("http") || badge.startsWith("/")) return badge;
-  return `/api/images/proxy/${badge}.webp`;
-}
-
 export function safeEmbedUrl(url?: string | null): string | null {
   if (!url) return null;
   try {
@@ -66,14 +60,28 @@ export function isLive(date: number, now = Date.now()): boolean {
   return now >= start && now < end;
 }
 
-export function isUpcoming(date: number, now = Date.now()): boolean {
-  return date > now;
-}
-
 export function formatTimeClient(ts: number): string {
   return new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "2-digit",
+  }).format(new Date(ts));
+}
+
+export function formatTimeServer(ts: number): string {
+  return new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "UTC",
+    timeZoneName: "short",
+  }).format(new Date(ts));
+}
+
+export function formatDayServer(ts: number): string {
+  return new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
   }).format(new Date(ts));
 }
 

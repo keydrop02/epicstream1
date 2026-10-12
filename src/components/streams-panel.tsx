@@ -18,8 +18,8 @@ function PlayerFrame({ src, title }: { src: string; title: string }) {
       {!loaded && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80">
           <div className="text-center">
-            <LoaderCircle className="mx-auto h-12 w-12 animate-spin text-primary" />
-            <p className="mt-2 text-muted-foreground">Loading player...</p>
+            <LoaderCircle className="mx-auto h-10 w-10 animate-spin text-primary" />
+            <p className="mt-3 text-sm text-muted-foreground">Loading player…</p>
           </div>
         </div>
       )}
@@ -29,7 +29,7 @@ function PlayerFrame({ src, title }: { src: string; title: string }) {
         allowFullScreen
         allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
         onLoad={() => setLoaded(true)}
-        className="h-full w-full rounded-lg"
+        className="h-full w-full"
       />
     </>
   );
@@ -98,7 +98,7 @@ function EmbedCodeDialog({ src, onClose }: { src: string; onClose: () => void })
         type="button"
         aria-label="Close"
         onClick={onClose}
-        className="absolute inset-0 cursor-pointer bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 cursor-pointer bg-black/70 backdrop-blur-sm"
       />
       <div
         ref={panelRef}
@@ -106,24 +106,19 @@ function EmbedCodeDialog({ src, onClose }: { src: string; onClose: () => void })
         role="dialog"
         aria-modal="true"
         aria-labelledby="embed-code-title"
-        className="relative z-10 flex w-[min(640px,calc(100%-32px))] flex-col overflow-hidden rounded-lg border border-border bg-background text-foreground shadow-lg outline-none"
+        className="relative z-10 flex w-[min(640px,calc(100%-32px))] flex-col overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-2xl shadow-black/60 outline-none"
       >
-        <div className="flex items-center justify-between border-b border-border px-4 py-3">
-          <h2 id="embed-code-title" className="flex items-center gap-2 text-lg font-semibold">
-            <Copy className="h-4 w-4" />
+        <div className="flex items-center justify-between border-b border-border px-5 py-4">
+          <h2 id="embed-code-title" className="flex items-center gap-2 text-base font-semibold">
+            <Copy className="h-4 w-4 text-primary" />
             Embed Code
           </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close"
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-          >
-            <X className="h-5 w-5" />
-          </button>
+          <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close">
+            <X className="h-4 w-4" />
+          </Button>
         </div>
-        <div className="space-y-3 p-4">
-          <pre className="max-h-[50vh] overflow-x-auto rounded-md bg-secondary p-3 text-xs leading-relaxed">
+        <div className="space-y-3 p-5">
+          <pre className="max-h-[50vh] overflow-x-auto rounded-lg border border-border bg-background p-3.5 text-xs leading-relaxed text-muted-foreground">
             {code}
           </pre>
           <Button type="button" onClick={copy} className="w-full">
@@ -179,10 +174,10 @@ export function StreamsPanel({
     <div className="h-full w-full px-3 pt-2">
       <div className="relative flex h-full w-full justify-center overflow-x-hidden">
         <div className="mx-auto h-full w-full max-w-4xl overflow-y-clip">
-          <div className="py-2 text-center">
-            <h1 className="text-2xl font-bold md:text-3xl">{title}</h1>
+          <div className="py-3 text-center">
+            <h1 className="text-xl font-bold tracking-tight md:text-2xl">{title}</h1>
             {activeStream ? null : (
-              <p className="text-sm text-muted-foreground">
+              <p className="mx-auto mt-2 max-w-2xl text-sm text-muted-foreground">
                 To watch {title}, scroll down and select your preferred stream. If no links are
                 available, wait for the countdown to finish until the event goes live.
               </p>
@@ -191,7 +186,7 @@ export function StreamsPanel({
               <div className="flex w-full justify-center">
                 <CountdownTimer
                   to={startsAt}
-                  className="mt-2 flex w-fit flex-col items-center gap-1 pt-3 text-lg font-bold tabular-nums tracking-wide text-primary sm:flex-row sm:items-baseline sm:gap-2 sm:text-xl"
+                  className="mt-2 flex w-fit flex-col items-center gap-1 pt-3 text-base font-bold tabular-nums tracking-wide text-primary sm:flex-row sm:items-baseline sm:gap-2 sm:text-lg"
                 />
               </div>
             ) : null}
@@ -203,11 +198,11 @@ export function StreamsPanel({
                 <div className="relative mb-3 w-full">
                   {embedUrl ? (
                     <>
-                      <div className="relative mx-auto aspect-video w-full overflow-hidden rounded-lg border border-border bg-background/20">
+                      <div className="relative mx-auto aspect-video w-full overflow-hidden rounded-xl border border-border bg-secondary/40">
                         <PlayerFrame key={embedUrl} src={embedUrl} title={title} />
                       </div>
 
-                      <div className="mt-2 flex justify-end gap-2">
+                      <div className="mt-3 flex justify-end gap-2">
                         <Button
                           variant="outline"
                           size="sm"
@@ -220,29 +215,24 @@ export function StreamsPanel({
                       </div>
                     </>
                   ) : (
-                    <div className="rounded-lg border border-border bg-secondary/40 p-6 text-center text-sm text-muted-foreground">
+                    <div className="rounded-xl border border-border bg-secondary/40 p-6 text-center text-sm text-muted-foreground">
                       This stream could not be loaded because its source is unavailable.
                     </div>
                   )}
                 </div>
               ) : null}
 
-              <div id="available-streams" className="mt-3">
-                <div className="mb-3 flex items-center">
+              <div id="available-streams" className="mt-4">
+                <div className="mb-4 flex items-center">
                   <h2 className="text-base font-semibold">Available Streams</h2>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={goBack}
-                    className="ml-auto"
-                  >
+                  <Button variant="ghost" size="sm" onClick={goBack} className="ml-auto">
                     <ArrowLeft className="h-4 w-4" />
                     Back
                   </Button>
                 </div>
 
                 {groups.length === 0 ? (
-                  <div className="rounded-lg border border-border bg-secondary/40 p-6 text-center text-sm text-muted-foreground">
+                  <div className="rounded-xl border border-border bg-secondary/40 p-6 text-center text-sm text-muted-foreground">
                     No stream links are available yet. If there are no links or buttons, please wait
                     for the timer to countdown until the event is live.
                   </div>

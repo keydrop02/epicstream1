@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { LocalTime } from "@/components/local-time";
 import { categoryName, isLive as computeIsLive, matchSlug, posterUrl } from "@/lib/format";
+import { SITE_NAME } from "@/lib/site";
 import type { Match } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -19,45 +19,55 @@ export function MatchCard({
   return (
     <Link
       href={`/watch/${matchSlug(match)}`}
-      className={cn("group block w-full rounded-lg transition-all", className)}
+      aria-label={`${match.title} — ${categoryName(match.category)}`}
+      className={cn(
+        "group block overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-white/20 md:relative md:aspect-video",
+        className,
+      )}
     >
-      <div className="relative h-auto overflow-hidden rounded-lg border border-border/40 bg-secondary">
+      <div className="relative aspect-video overflow-hidden bg-secondary md:absolute md:inset-0 md:aspect-auto">
         {match.poster ? (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={posterUrl(match.poster)}
-              alt={`${match.title} poster`}
+              alt=""
               loading="lazy"
-              className="z-[-10] aspect-video w-full rounded-lg object-cover transition-transform duration-500 group-hover:scale-105"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </>
         ) : (
-          <div className="flex aspect-video w-full items-center justify-center rounded-lg bg-gradient-to-br from-secondary to-primary/10 transition-colors duration-500 group-hover:to-primary/20">
-            <span className="text-xl font-extrabold tracking-tight text-muted-foreground">
-              EpicStream
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-secondary to-card">
+            <span className="text-2xl font-bold tracking-tight text-muted-foreground/40 sm:text-4xl">
+              {SITE_NAME}
             </span>
           </div>
         )}
-        {isLiveMatch && (
-          <Badge variant="live" className="absolute left-2 top-2 gap-1.5">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" aria-hidden />
-            LIVE
-          </Badge>
-        )}
-      </div>
-      <div className="relative flex items-center gap-4 py-4">
-        <div className="min-w-0 flex-grow">
-          <h1 title={match.title} className="line-clamp-2 break-words text-sm font-bold sm:text-base">
-            {match.title}
-          </h1>
-          <p className="text-sm text-muted-foreground/70 sm:text-base">
-            <span className="font-semibold">{categoryName(match.category)}</span>{" "}
-            <span>
-              | <LocalTime ts={match.date} />
+
+        <div className="absolute inset-0 hidden bg-gradient-to-t from-black/85 via-black/20 to-transparent md:block" />
+
+        <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-3">
+          {isLiveMatch ? (
+            <span className="inline-flex items-center gap-1.5 rounded-md bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" aria-hidden />
+              Live
             </span>
-          </p>
+          ) : (
+            <span aria-hidden />
+          )}
+          <span className="hidden rounded-md bg-black/50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white/85 backdrop-blur-sm md:inline-flex">
+            <LocalTime ts={match.date} />
+          </span>
         </div>
+      </div>
+
+      <div className="p-3 md:absolute md:inset-x-0 md:bottom-0">
+        <p className="line-clamp-2 min-h-[2.5rem] text-sm font-semibold leading-snug text-ink md:min-h-0 md:text-white">
+          {match.title}
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground md:hidden">
+          <LocalTime ts={match.date} />
+        </p>
       </div>
     </Link>
   );

@@ -38,7 +38,10 @@ export async function GET(request: Request) {
           const v = res.headers.get(h);
           if (v) headers.set(h, v);
         }
-        headers.set("cache-control", "public, max-age=86400, immutable");
+        headers.set(
+          "cache-control",
+          res.ok ? "public, max-age=86400, immutable" : "public, max-age=300",
+        );
         return new Response(res.body, { status: res.status, headers });
       }
     } catch {

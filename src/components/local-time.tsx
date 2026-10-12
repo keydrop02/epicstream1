@@ -1,13 +1,13 @@
 "use client";
 
 import { useIsClient } from "@/components/use-is-client";
-import { formatTimeClient } from "@/lib/format";
+import { formatTimeClient, formatTimeServer } from "@/lib/format";
 
 export function LocalTime({ ts, className }: { ts: number; className?: string }) {
   const isClient = useIsClient();
   return (
-    <span className={className} suppressHydrationWarning>
-      {isClient ? formatTimeClient(ts) : ""}
-    </span>
+    <time dateTime={new Date(ts).toISOString()} suppressHydrationWarning className={className}>
+      {isClient ? formatTimeClient(ts) : formatTimeServer(ts)}
+    </time>
   );
 }

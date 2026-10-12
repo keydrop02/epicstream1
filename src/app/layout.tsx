@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0a0a0a",
+  themeColor: "#09090b",
   colorScheme: "dark",
 };
 
@@ -44,8 +44,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const sports = await getSports();
 
   return (
-    <html lang="en" className={`dark ${inter.variable}`} suppressHydrationWarning>
-      <body className="min-h-screen bg-background font-sans antialiased">
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         <div className="flex min-h-screen flex-col">
           <SiteHeader sports={sports} />
           <main className="flex flex-1 flex-col">{children}</main>

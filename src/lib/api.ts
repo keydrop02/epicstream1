@@ -12,14 +12,18 @@ export class UpstreamError extends Error {
   }
 }
 
-async function fetchWithRetry(path: string, attempts = 4): Promise<Response | null> {
+async function fetchWithRetry(
+  path: string,
+  attempts = 4,
+  timeoutMs = 15000,
+): Promise<Response | null> {
   const url = `${API_BASE}${path}`;
   for (let i = 0; i < attempts; i++) {
     try {
       const res = await fetch(url, {
         headers: { accept: "application/json" },
         next: { revalidate: REVALIDATE },
-        signal: AbortSignal.timeout(12000),
+        signal: AbortSignal.timeout(timeoutMs),
       });
       if (res.ok) return res;
     } catch {
@@ -30,8 +34,8 @@ async function fetchWithRetry(path: string, attempts = 4): Promise<Response | nu
   return null;
 }
 
-async function getJson<T>(path: string): Promise<T | null> {
-  const res = await fetchWithRetry(path);
+async function getJson<T>(path: string, attempts = 4, timeoutMs = 15000): Promise<T | null> {
+  const res = await fetchWithRetry(path, attempts, timeoutMs);
   if (!res) return null;
   try {
     return (await res.json()) as T;
@@ -41,7 +45,7 @@ async function getJson<T>(path: string): Promise<T | null> {
 }
 
 export const getSports = cache(async (): Promise<Sport[]> => {
-  return (await getJson<Sport[]>("/api/sports")) ?? [];
+  return (await getJson<Sport[]>("/api/sports", 1, 6000)) ?? [];
 });
 
 export const getAllMatches = cache(async (): Promise<Match[]> => {
@@ -56,10 +60,6 @@ export const getAllMatchesStrict = cache(async (): Promise<Match[]> => {
 
 export const getLiveMatches = cache(async (): Promise<Match[]> => {
   return (await getJson<Match[]>("/api/matches/live")) ?? [];
-});
-
-export const getMatchesByCategory = cache(async (category: string): Promise<Match[]> => {
-  return (await getJson<Match[]>(`/api/matches/${encodeURIComponent(category)}`)) ?? [];
 });
 
 export const getMatchStreams = cache(async (source: string, id: string): Promise<Stream[]> => {

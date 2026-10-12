@@ -87,6 +87,11 @@ function doPost(e) {
     return json_({ ok: false, error: "Invalid or missing payload." });
   }
 
+  var expected = PropertiesService.getScriptProperties().getProperty("FEEDBACK_TOKEN");
+  if (expected && String(payload.token || "") !== expected) {
+    return json_({ ok: false, error: "Unauthorized." });
+  }
+
   var message = String(payload.message || "").trim();
   var email = String(payload.email || "").trim();
 

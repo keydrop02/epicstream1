@@ -66,7 +66,7 @@ export function MultiviewBoard({
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center gap-2">
-        <div className="inline-flex rounded-md border border-border p-1">
+        <div className="inline-flex rounded-full border border-border bg-secondary/40 p-1">
           {(
             [
               { v: 1, icon: Square, label: "1" },
@@ -78,8 +78,10 @@ export function MultiviewBoard({
               key={v}
               onClick={() => setLayout(v)}
               className={cn(
-                "flex items-center gap-1 rounded px-3 py-1.5 text-sm font-semibold transition-colors",
-                layout === v ? "bg-primary text-primary-foreground" : "hover:bg-accent",
+                "flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors",
+                layout === v
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               <Icon className="h-4 w-4" /> {label}
@@ -230,7 +232,7 @@ function AddStreamModal({
         onClick={onClose}
         className="absolute inset-0 cursor-pointer bg-black/60 backdrop-blur-sm"
       />
-      <div className="relative z-10 flex w-[min(600px,calc(100%-32px))] flex-col overflow-hidden rounded-lg border border-border bg-background text-foreground shadow-lg">
+      <div className="relative z-10 flex w-[min(600px,calc(100%-32px))] flex-col overflow-hidden rounded-2xl border border-border bg-popover text-popover-foreground shadow-2xl shadow-black/60">
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <div className="flex items-center gap-1">
             {(sport || openMatch) && (

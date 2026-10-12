@@ -68,7 +68,7 @@ function FilterSelect({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={label}
-        className="flex h-9 w-full min-w-0 cursor-pointer items-center justify-between gap-2 rounded-md border border-input bg-background pl-3 pr-2.5 text-sm font-medium shadow-sm transition-colors hover:border-primary/60 focus:outline-none focus:ring-2 focus:ring-ring sm:w-auto sm:min-w-44"
+        className="flex h-10 w-full min-w-0 cursor-pointer items-center justify-between gap-2 rounded-lg border border-border bg-secondary/40 px-3.5 text-sm font-medium transition-colors hover:border-white/15 focus:outline-none sm:w-auto sm:min-w-44"
       >
         <span className="truncate">{current?.label ?? ""}</span>
         <ChevronDown
@@ -82,7 +82,7 @@ function FilterSelect({
       {open && (
         <ul
           role="listbox"
-          className="absolute left-0 top-full z-50 mt-1 max-h-72 w-full min-w-[11rem] overflow-y-auto rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg sm:w-auto"
+          className="absolute left-0 top-full z-50 mt-2 max-h-72 w-full min-w-[11rem] overflow-y-auto rounded-xl border border-border bg-popover p-1.5 shadow-2xl shadow-black/60 sm:w-auto"
         >
           {options.map((o) => (
             <li key={o.value} role="option" aria-selected={o.value === value}>
@@ -93,8 +93,8 @@ function FilterSelect({
                   setOpen(false);
                 }}
                 className={cn(
-                  "flex w-full items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-left text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
-                  o.value === value && "bg-primary/10 font-semibold text-primary",
+                  "flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-accent",
+                  o.value === value ? "bg-primary/10 font-medium text-primary" : "text-muted-foreground",
                 )}
               >
                 <span className="truncate">{o.label}</span>
@@ -157,16 +157,18 @@ export function ScheduleView({
   }, [filtered]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="inline-grid w-auto grid-cols-3 self-start rounded-md border border-border p-1">
+    <div className="space-y-8">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="inline-flex w-fit rounded-full border border-border bg-secondary/40 p-1">
           {(["all", "popular", "live"] as Mode[]).map((m) => (
             <button
               key={m}
               onClick={() => setMode(m)}
               className={cn(
-                "rounded px-2 py-1.5 text-sm font-semibold capitalize transition-colors min-w-14 sm:min-w-20 sm:px-3",
-                mode === m ? "bg-primary text-primary-foreground" : "hover:bg-accent",
+                "cursor-pointer rounded-full px-3 py-1.5 text-sm font-medium capitalize transition-colors sm:px-4",
+                mode === m
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               {m}
@@ -188,15 +190,15 @@ export function ScheduleView({
       </div>
 
       {groups.length === 0 && (
-        <p className="py-16 text-center text-muted-foreground">No matches match your filters.</p>
+        <p className="py-20 text-center text-muted-foreground">No matches match your filters.</p>
       )}
 
       {groups.map((group) => (
-        <section key={dayKey(group[0].date)} className="space-y-2">
-          <h2 className="py-2 text-lg font-bold">
+        <section key={dayKey(group[0].date)} className="space-y-4">
+          <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
             <LocalDay ts={group[0].date} />
           </h2>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {group.map((m) => (
               <MatchCard key={`${m.id}-${m.date}`} match={m} live={liveIds.has(m.id)} />
             ))}

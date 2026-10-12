@@ -16,10 +16,10 @@ export default async function MultiviewPage() {
   ]);
 
   return (
-    <div className="container max-w-screen-2xl space-y-6 px-4 py-8 sm:px-6 lg:px-10">
+    <div className="mx-auto w-full max-w-screen-2xl space-y-8 px-3 py-10 sm:px-4 lg:px-6">
       <div>
-        <h1 className="text-2xl font-bold sm:text-3xl">Multi Stream</h1>
-        <p className="text-muted-foreground">Watch up to 4 live streams at once.</p>
+        <h1 className="text-3xl font-bold tracking-tight">Multi Stream</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Watch up to 4 live streams at once.</p>
       </div>
       <MultiviewBoard matches={matches} live={live} sports={sports} />
     </div>

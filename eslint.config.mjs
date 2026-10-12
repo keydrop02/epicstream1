@@ -3,7 +3,7 @@ import next from "eslint-config-next";
 const config = [
   ...next,
   {
-    ignores: [".next/**", "node_modules/**", "public/**", "next-env.d.ts"],
+    ignores: [".next/**", ".open-next/**", "node_modules/**", "public/**", "next-env.d.ts"],
   },
 ];
 
