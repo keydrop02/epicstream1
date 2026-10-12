@@ -8,10 +8,40 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  // Workers KV incremental cache for ISR / data cache (no payment method required)
+  // Create it with: npx wrangler kv namespace create NEXT_INC_CACHE_KV
+  // then paste the returned id below.
+  "kv_namespaces": [
+    {
+      "binding": "NEXT_INC_CACHE_KV",
+      "id": "REPLACE_WITH_KV_NAMESPACE_ID"
+    }
+  ],
+  // Self reference used by the revalidation queue
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "epicstream"
+    }
+  ],
+  // Durable Object queue for time-based revalidation
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "NEXT_CACHE_DO_QUEUE",
+        "class_name": "DOQueueHandler"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["DOQueueHandler"]
+    }
+  ],
   "observability": {
     "enabled": true
   }
   // Runtime env vars can be added here, e.g.:
   // "vars": { "STREAMED_API": "https://streamed.pk", "STREAMED_REVALIDATE": "30" }
-  // For persistent ISR caching, add an R2 bucket and reference it in open-next.config.ts.
 }
