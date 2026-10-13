@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Search, X } from "lucide-react";
 import { getAllMatchesClient } from "@/lib/client-api";
+import { ListItemSkeleton } from "@/components/skeleton";
 import { categoryName, isLive, matchSlug, posterUrl } from "@/lib/format";
 import type { Match } from "@/lib/types";
 
@@ -96,7 +97,13 @@ export function SearchDialog({ onClose }: { onClose: () => void }) {
           </button>
         </div>
         <div className="max-h-[50vh] overflow-y-auto p-2">
-          {loading && <p className="p-4 text-sm text-muted-foreground">Loading matches…</p>}
+          {loading && (
+            <div className="space-y-2 p-2">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <ListItemSkeleton key={i} />
+              ))}
+            </div>
+          )}
           {!loading && results.length === 0 && (
             <p className="p-4 text-sm text-muted-foreground">No matches found.</p>
           )}

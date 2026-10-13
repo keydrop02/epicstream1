@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, LayoutGrid, Rows2, Search, Square, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SourceList } from "@/components/source-list";
+import { CardSkeleton, TextSkeleton } from "@/components/skeleton";
 import { getStreamsForMatchClient, groupStreamsBySource } from "@/lib/client-api";
 import { categoryName } from "@/lib/format";
 import type { Match, Sport, Stream } from "@/lib/types";
@@ -48,7 +49,18 @@ export function MultiviewBoard() {
   const placeholders = Math.max(0, layout - visible.length);
 
   if (loading) {
-    return <p className="py-20 text-center text-sm text-muted-foreground">Loading…</p>;
+    return (
+      <div className="space-y-6">
+        <div className="flex gap-2">
+          <TextSkeleton className="h-9 w-32" />
+        </div>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <CardSkeleton key={i} className="aspect-video" />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (

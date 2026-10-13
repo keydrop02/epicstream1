@@ -6,6 +6,7 @@ import { Check, ChevronDown } from "lucide-react";
 import { MatchCard } from "@/components/match-card";
 import { LocalDay } from "@/components/local-day";
 import { useMountTime } from "@/components/use-is-client";
+import { CardSkeleton, TextSkeleton } from "@/components/skeleton";
 import { categoryName } from "@/lib/format";
 import type { Match } from "@/lib/types";
 import { useMatchesData } from "@/lib/use-matches-data";
@@ -151,7 +152,22 @@ export function ScheduleView() {
   }, [filtered]);
 
   if (loading) {
-    return <p className="py-20 text-center text-sm text-muted-foreground">Loading…</p>;
+    return (
+      <div className="space-y-8">
+        <div className="flex gap-2">
+          <TextSkeleton className="h-9 w-24" />
+          <TextSkeleton className="h-9 w-32" />
+        </div>
+        <div className="space-y-4">
+          <TextSkeleton className="h-8 w-48" />
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <CardSkeleton key={i} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

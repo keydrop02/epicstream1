@@ -3,6 +3,7 @@
 import { Carousel } from "@/components/carousel";
 import { MatchCard } from "@/components/match-card";
 import { SectionHeader } from "@/components/section-header";
+import { RailSkeleton, TextSkeleton } from "@/components/skeleton";
 import { categoryName } from "@/lib/format";
 import { SITE_NAME } from "@/lib/site";
 import { useMatchesData } from "@/lib/use-matches-data";
@@ -29,8 +30,19 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="mx-auto w-full max-w-screen-2xl px-3 py-20 text-center text-sm text-muted-foreground sm:px-4 lg:px-6">
-        Loading matches…
+      <div className="mx-auto w-full max-w-screen-2xl space-y-6 px-3 py-8 sm:px-4 lg:px-6">
+        <div className="space-y-3">
+          <TextSkeleton className="h-6 w-40" />
+          <RailSkeleton count={4} />
+        </div>
+        <div className="space-y-3">
+          <TextSkeleton className="h-6 w-40" />
+          <RailSkeleton count={4} />
+        </div>
+        <div className="space-y-3">
+          <TextSkeleton className="h-6 w-40" />
+          <RailSkeleton count={4} />
+        </div>
       </div>
     );
   }

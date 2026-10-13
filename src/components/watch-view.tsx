@@ -1,7 +1,10 @@
 "use client";
 
+"use client";
+
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { Skeleton, TextSkeleton } from "@/components/skeleton";
 import { StreamsPanel } from "@/components/streams-panel";
 import { getStreamsForMatchClient, matchFromSlugClient } from "@/lib/client-api";
 import type { StreamGroup } from "@/lib/client-api";
@@ -58,8 +61,29 @@ export function WatchView({
 
   if (state.status === "loading") {
     return (
-      <div className="flex h-full w-full items-center justify-center p-6">
-        <div className="text-center text-sm text-muted-foreground">Loading stream links…</div>
+      <div className="mx-auto w-full max-w-4xl space-y-6 px-3 py-6">
+        <div className="space-y-3 text-center">
+          <TextSkeleton className="mx-auto h-8 w-64" />
+          <TextSkeleton className="mx-auto h-4 w-80" />
+        </div>
+        <Skeleton className="aspect-video w-full" />
+        <div className="space-y-3">
+          <TextSkeleton className="h-6 w-48" />
+          <div className="space-y-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="rounded-xl border border-border bg-card p-4">
+                <div className="flex items-center justify-between">
+                  <TextSkeleton className="h-4 w-24" />
+                  <TextSkeleton className="h-3.5 w-16" />
+                </div>
+                <div className="mt-3 flex gap-2">
+                  <TextSkeleton className="h-9 w-24" />
+                  <TextSkeleton className="h-9 w-24" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
