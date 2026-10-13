@@ -12,9 +12,9 @@ export function CardSkeleton({ className }: { className?: string }) {
   return (
     <div className={cn("overflow-hidden rounded-xl border border-border bg-card", className)}>
       <Skeleton className="aspect-video w-full rounded-none" />
-      <div className="space-y-2 p-3">
-        <TextSkeleton className="h-4 w-3/4" />
-        <TextSkeleton className="h-3.5 w-1/2" />
+      <div className="space-y-2 p-3 md:absolute md:inset-x-0 md:bottom-0 md:bg-gradient-to-t md:from-black/90 md:to-transparent md:pt-12 md:pb-3">
+        <TextSkeleton className="h-4 w-3/4 md:bg-white/30 md:h-4" />
+        <TextSkeleton className="h-3.5 w-1/2 md:hidden" />
       </div>
     </div>
   );
