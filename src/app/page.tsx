@@ -1,12 +1,12 @@
+"use client";
+
 import { Carousel } from "@/components/carousel";
 import { MatchCard } from "@/components/match-card";
 import { SectionHeader } from "@/components/section-header";
-import { getAllMatches, getLiveMatches, getSports } from "@/lib/api";
 import { categoryName } from "@/lib/format";
 import { SITE_NAME } from "@/lib/site";
+import { useMatchesData } from "@/lib/use-matches-data";
 import type { Match } from "@/lib/types";
-
-export const revalidate = 30;
 
 const slideClass =
   "min-w-0 shrink-0 basis-[calc(50%-0.5rem)] md:basis-[calc(42%-0.5rem)] lg:basis-[calc(31%-0.5rem)] xl:basis-[calc(23.5%-0.5rem)]";
@@ -24,11 +24,19 @@ function CardRail({ matches, live }: { matches: Match[]; live: Match[] }) {
   );
 }
 
-export default async function HomePage() {
-  const [sports, all, live] = await Promise.all([getSports(), getAllMatches(), getLiveMatches()]);
+export default function HomePage() {
+  const { sports, matches, live, loading } = useMatchesData();
+
+  if (loading) {
+    return (
+      <div className="mx-auto w-full max-w-screen-2xl px-3 py-20 text-center text-sm text-muted-foreground sm:px-4 lg:px-6">
+        Loading matches…
+      </div>
+    );
+  }
 
   const byCategory = sports
-    .map((s) => ({ sport: s, matches: all.filter((m) => m.category === s.id) }))
+    .map((s) => ({ sport: s, matches: matches.filter((m) => m.category === s.id) }))
     .filter((group) => group.matches.length > 0);
 
   return (
@@ -66,7 +74,7 @@ export default async function HomePage() {
         ))}
       </div>
 
-      {all.length === 0 && (
+      {matches.length === 0 && (
         <p className="py-20 text-center text-muted-foreground">
           No matches are available right now. Please try again later.
         </p>

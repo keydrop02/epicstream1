@@ -15,6 +15,7 @@ import {
 import { SearchDialog } from "@/components/search-dialog";
 import { FeedbackDialog } from "@/components/feedback-dialog";
 import { Button } from "@/components/ui/button";
+import { getSportsClient } from "@/lib/client-api";
 import { categoryName } from "@/lib/format";
 import type { Sport } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -87,8 +88,9 @@ function SportsMenu({ sports }: { sports: Sport[] }) {
   );
 }
 
-export function SiteHeader({ sports }: { sports: Sport[] }) {
+export function SiteHeader() {
   const pathname = usePathname();
+  const [sports, setSports] = useState<Sport[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [sportsOpen, setSportsOpen] = useState(false);
@@ -96,6 +98,16 @@ export function SiteHeader({ sports }: { sports: Sport[] }) {
   const closeSearch = useCallback(() => setSearchOpen(false), []);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const closeFeedback = useCallback(() => setFeedbackOpen(false), []);
+
+  useEffect(() => {
+    let cancelled = false;
+    getSportsClient().then((s) => {
+      if (!cancelled) setSports(s);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

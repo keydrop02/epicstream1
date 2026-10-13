@@ -54,6 +54,14 @@ export function matchSlug(match: { id: string; title: string }): string {
   return `${s}-${match.id}`;
 }
 
+export function titleFromSlug(slugId: string): string {
+  const words = slugId
+    .split("-")
+    .filter((t) => t.length > 0 && !/^\d+$/.test(t))
+    .map((t) => t.charAt(0).toUpperCase() + t.slice(1));
+  return words.length > 0 ? words.join(" ") : slugId;
+}
+
 export function isLive(date: number, now = Date.now()): boolean {
   const start = date;
   const end = date + 3 * 60 * 60 * 1000;

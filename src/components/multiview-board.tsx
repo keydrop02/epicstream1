@@ -4,8 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, LayoutGrid, Rows2, Search, Square, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SourceList } from "@/components/source-list";
+import { getStreamsForMatchClient, groupStreamsBySource } from "@/lib/client-api";
 import { categoryName } from "@/lib/format";
 import type { Match, Sport, Stream } from "@/lib/types";
+import { useMatchesData } from "@/lib/use-matches-data";
 import { cn } from "@/lib/utils";
 
 type Layout = 1 | 2 | 4;
@@ -16,25 +18,8 @@ interface Slot {
   embedUrl: string;
 }
 
-function groupStreams(streams: Stream[]): Array<{ source: string; streams: Stream[] }> {
-  const map = new Map<string, Stream[]>();
-  for (const s of streams) {
-    const list = map.get(s.source) ?? [];
-    list.push(s);
-    map.set(s.source, list);
-  }
-  return Array.from(map.entries()).map(([source, list]) => ({ source, streams: list }));
-}
-
-export function MultiviewBoard({
-  matches,
-  live,
-  sports,
-}: {
-  matches: Match[];
-  live: Match[];
-  sports: Sport[];
-}) {
+export function MultiviewBoard() {
+  const { matches, live, sports, loading } = useMatchesData();
   const [slots, setSlots] = useState<Slot[]>([]);
   const [layout, setLayout] = useState<Layout>(4);
   const [picking, setPicking] = useState(false);
@@ -61,6 +46,10 @@ export function MultiviewBoard({
 
   const visible = slots.slice(0, layout);
   const placeholders = Math.max(0, layout - visible.length);
+
+  if (loading) {
+    return <p className="py-20 text-center text-sm text-muted-foreground">Loading…</p>;
+  }
 
   return (
     <div className="space-y-6">
@@ -201,20 +190,8 @@ function AddStreamModal({
 
   const loadStreams = async (match: Match) => {
     setStreamsByMatch((prev) => ({ ...prev, [match.id]: "loading" }));
-    const lists = await Promise.all(
-      match.sources.map(async (s) => {
-        try {
-          const res = await fetch(
-            `/api/stream/${encodeURIComponent(s.source)}/${encodeURIComponent(s.id)}`,
-          );
-          if (!res.ok) return [];
-          return (await res.json()) as Stream[];
-        } catch {
-          return [];
-        }
-      }),
-    );
-    setStreamsByMatch((prev) => ({ ...prev, [match.id]: lists.flat() }));
+    const groups = await getStreamsForMatchClient(match);
+    setStreamsByMatch((prev) => ({ ...prev, [match.id]: groups.flatMap((g) => g.streams) }));
   };
 
   const toggleMatch = (match: Match) => {
@@ -304,7 +281,7 @@ function AddStreamModal({
               {filtered.map((match) => {
                 const open = openMatch === match.id;
                 const st = streamsByMatch[match.id];
-                const groups = Array.isArray(st) ? groupStreams(st) : [];
+                const groups = Array.isArray(st) ? groupStreamsBySource(st) : [];
                 return (
                   <div key={match.id} className="rounded-lg border border-border transition-all">
                     <button

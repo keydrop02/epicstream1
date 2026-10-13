@@ -1,5 +1,5 @@
 import { cache } from "react";
-import type { Match, Sport, SourceInfo, Stream } from "./types";
+import type { Match, Sport, Stream } from "./types";
 
 export const API_BASE = (process.env.STREAMED_API ?? "https://streamed.pk").replace(/\/$/, "");
 
@@ -22,7 +22,6 @@ async function fetchWithRetry(
     try {
       const res = await fetch(url, {
         headers: { accept: "application/json" },
-        next: { revalidate: REVALIDATE },
         signal: AbortSignal.timeout(timeoutMs),
       });
       if (res.ok) return res;
@@ -86,20 +85,3 @@ export const getStreamsForMatch = cache(
     return groups.filter((g) => g.streams.length > 0);
   },
 );
-
-export const SOURCE_INFO: Record<string, SourceInfo> = {
-  admin: { source: "admin", label: "Admin" },
-  alpha: { source: "alpha", label: "Alpha" },
-  bravo: { source: "bravo", label: "Bravo" },
-  charlie: { source: "charlie", label: "Charlie" },
-  delta: { source: "delta", label: "Delta" },
-  echo: { source: "echo", label: "Echo" },
-  foxtrot: { source: "foxtrot", label: "Foxtrot" },
-  golf: { source: "golf", label: "Golf" },
-  hotel: { source: "hotel", label: "Hotel" },
-  intel: { source: "intel", label: "Intel" },
-};
-
-export function sourceLabel(source: string): string {
-  return SOURCE_INFO[source]?.label ?? source.charAt(0).toUpperCase() + source.slice(1);
-}

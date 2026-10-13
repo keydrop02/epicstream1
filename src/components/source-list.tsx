@@ -1,14 +1,12 @@
 "use client";
 
 import { Globe } from "lucide-react";
-import { sourceLabel } from "@/lib/api";
+import type { StreamGroup } from "@/lib/client-api";
+import { sourceLabel } from "@/lib/sources";
 import type { Stream } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-export interface StreamGroup {
-  source: string;
-  streams: Stream[];
-}
+export type { StreamGroup };
 
 export function SourceList({
   groups,

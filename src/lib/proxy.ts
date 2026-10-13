@@ -7,7 +7,7 @@ export async function proxyJson(path: string): Promise<Response> {
     try {
       const res = await fetch(`${API_BASE}${path}`, {
         headers: { accept: "application/json" },
-        next: { revalidate: REVALIDATE },
+        cache: "no-store",
         signal: AbortSignal.timeout(15000),
       });
       if (res.status >= 500) {

@@ -7,7 +7,8 @@ import { MatchCard } from "@/components/match-card";
 import { LocalDay } from "@/components/local-day";
 import { useMountTime } from "@/components/use-is-client";
 import { categoryName } from "@/lib/format";
-import type { Match, Sport } from "@/lib/types";
+import type { Match } from "@/lib/types";
+import { useMatchesData } from "@/lib/use-matches-data";
 import { cn } from "@/lib/utils";
 
 type Mode = "all" | "popular" | "live";
@@ -108,17 +109,10 @@ function FilterSelect({
   );
 }
 
-export function ScheduleView({
-  matches,
-  sports,
-  live,
-}: {
-  matches: Match[];
-  sports: Sport[];
-  live: Match[];
-}) {
+export function ScheduleView() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { sports, matches, live, loading } = useMatchesData();
   const urlSport = searchParams.get("sport");
   const sport = urlSport && sports.some((s) => s.id === urlSport) ? urlSport : "all";
   const [mode, setMode] = useState<Mode>("all");
@@ -155,6 +149,10 @@ export function ScheduleView({
     }
     return Array.from(map.values());
   }, [filtered]);
+
+  if (loading) {
+    return <p className="py-20 text-center text-sm text-muted-foreground">Loading…</p>;
+  }
 
   return (
     <div className="space-y-8">

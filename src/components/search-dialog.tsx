@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Search, X } from "lucide-react";
+import { getAllMatchesClient } from "@/lib/client-api";
 import { categoryName, isLive, matchSlug, posterUrl } from "@/lib/format";
 import type { Match } from "@/lib/types";
 
@@ -39,17 +40,19 @@ export function SearchDialog({ onClose }: { onClose: () => void }) {
     document.addEventListener("keydown", onKey);
     const focusTimer = setTimeout(() => inputRef.current?.focus(), 50);
 
-    const controller = new AbortController();
-    fetch("/api/matches/all", { signal: controller.signal })
-      .then((r) => (r.ok ? r.json() : []))
-      .then((data) => setMatches(Array.isArray(data) ? data : []))
-      .catch(() => setMatches([]))
-      .finally(() => setLoading(false));
+    let cancelled = false;
+    getAllMatchesClient()
+      .then((data) => {
+        if (!cancelled) setMatches(data);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
 
     return () => {
+      cancelled = true;
       document.removeEventListener("keydown", onKey);
       clearTimeout(focusTimer);
-      controller.abort();
     };
   }, [onClose]);
 

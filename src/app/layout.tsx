@@ -4,7 +4,6 @@ import { Orbitron } from "next/font/google";
 import { NavTracker } from "@/components/nav-tracker";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { getSports } from "@/lib/api";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -49,15 +48,13 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const sports = await getSports();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${orbitron.variable}`} suppressHydrationWarning>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         <NavTracker />
         <div className="flex min-h-screen flex-col">
-          <SiteHeader sports={sports} />
+          <SiteHeader />
           <main className="flex flex-1 flex-col">{children}</main>
           <SiteFooter />
         </div>
