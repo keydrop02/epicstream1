@@ -8,37 +8,6 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
-  // Workers KV incremental cache for ISR / data cache (no payment method required)
-  // Create it with: npx wrangler kv namespace create NEXT_INC_CACHE_KV
-  // then paste the returned id below.
-  "kv_namespaces": [
-    {
-      "binding": "NEXT_INC_CACHE_KV",
-      "id": "4e6deef640ff492e95371db44e9a93d8"
-    }
-  ],
-  // Self reference used by the revalidation queue
-  "services": [
-    {
-      "binding": "WORKER_SELF_REFERENCE",
-      "service": "epicstream"
-    }
-  ],
-  // Durable Object queue for time-based revalidation
-  "durable_objects": {
-    "bindings": [
-      {
-        "name": "NEXT_CACHE_DO_QUEUE",
-        "class_name": "DOQueueHandler"
-      }
-    ]
-  },
-  "migrations": [
-    {
-      "tag": "v1",
-      "new_sqlite_classes": ["DOQueueHandler"]
-    }
-  ],
   "observability": {
     "enabled": true
   }
